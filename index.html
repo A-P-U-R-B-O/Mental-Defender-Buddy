@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Mental Defense Coach</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <h1>AI Mental Defense Coach</h1>
+      <p>Speak your mind freely...</p>
+    </header>
+
+    <main>
+      <textarea id="userInput" rows="6" placeholder="Speak your mind..."></textarea>
+      <button onclick="sendMessage()">Send</button>
+      <div id="response"></div>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Mental Coach Inc.</p>
+    </footer>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById('userInput').value;
+      const resDiv = document.getElementById('response');
+      resDiv.innerText = 'Thinking...';
+
+      try {
+        const response = await fetch('/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: input })
+        });
+
+        if (!response.ok) throw new Error('Server error');
+
+        const data = await response.json();
+        resDiv.innerText = "AI: " + data.reply;
+      } catch (err) {
+        resDiv.innerText = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
